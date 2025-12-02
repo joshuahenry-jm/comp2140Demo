@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 
 public class queueManager {
-ArrayList<Integer> queue = new ArrayList<>();
-ArrayList<String> ActiveQueue = new ArrayList<>();
+private ArrayList<Integer> queue = new ArrayList<>();
+private ArrayList<String> ActiveQueue = new ArrayList<>();
 
 String burger = "burger";
 String hotDog = "Hot Dog";
@@ -20,6 +20,13 @@ int cheesyFriesTime = 10;
 int NuggetsAndFriesTime = 5;
 
 
+public ArrayList<String> getActiveQueue() {
+        return new ArrayList<>(ActiveQueue);
+    }
+
+public ArrayList<Integer> getQueue() {
+        return new ArrayList<>(queue);
+    }
 
 public int foodList() {
     Scanner scan = new Scanner(System.in);
