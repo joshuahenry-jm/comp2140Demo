@@ -1,4 +1,11 @@
-class Order {
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.text.SimpleDateFormat;
+
+public class order {
+    private static int idCounter = 1;
+
     private int orderId;
     private Date orderTime;
     private String status;
@@ -6,13 +13,18 @@ class Order {
     private User user;
     private List<OrderItem> items;
 
-    private static int idCounter = 1;
+    private static final SimpleDateFormat DATE_FORMAT =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    public Order() {
+    public order() {
         this.orderId = idCounter++;
         this.orderTime = new Date();
         this.status = "pending";
         this.items = new ArrayList<>();
+        this.estimatedWaitTime = QueueManager.getInstance().calculateQueueWaitTime();
+    }
+
+    public void calculateWaitTime() {
         this.estimatedWaitTime = QueueManager.getInstance().calculateQueueWaitTime();
     }
 
@@ -23,16 +35,17 @@ class Order {
     }
 
     public void addItem(MenuItem item, int quantity) {
-        if (item.isInStock() && item.getStockQuantity() >= quantity) {
-            items.add(new OrderItem(item, quantity));
-            item.updateStock(item.getStockQuantity() - quantity);
-        } else {
+        if (!item.isInStock() || item.getStockQuantity() < quantity) {
             throw new RuntimeException("Item out of stock: " + item.getName());
         }
+
+        items.add(new OrderItem(item, quantity));
+        item.updateStock(item.getStockQuantity() - quantity);
     }
 
     public void generateTicket() {
         double total = 0.0;
+
         String border = "═".repeat(42);
         String thinBorder = "─".repeat(42);
 
@@ -54,10 +67,10 @@ class Order {
             total += subtotal;
 
             System.out.printf(" %2dx %-20s %6.2f %8.2f\n",
-                oi.getQuantity(),
-                truncate(item.getName(), 20),
-                item.getPrice(),
-                subtotal);
+                    oi.getQuantity(),
+                    truncate(item.getName(), 20),
+                    item.getPrice(),
+                    subtotal);
         }
 
         System.out.println(thinBorder);
@@ -69,15 +82,15 @@ class Order {
         System.out.println(border + "\n");
     }
 
-    public void setUser(User user) { this.user = user; }
+    private String truncate(String name, int maxLen) {
+        return name.length() <= maxLen ? name : name.substring(0, maxLen - 3) + "...";
+    }
+
+
     public int getOrderId() { return orderId; }
     public String getStatus() { return status; }
     public int getEstimatedWaitTime() { return estimatedWaitTime; }
     public List<OrderItem> getItems() { return items; }
 
-    private static int idCounter = 1;
-    private static int generateId() { return idCounter++; }
+    public void setUser(User user) { this.user = user; }
 }
-
-
-order.generateTicket();
