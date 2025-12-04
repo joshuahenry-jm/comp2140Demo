@@ -10,6 +10,7 @@ public class Main {
     private static ArrayList<User> users = new ArrayList<>();
     private static HashMap<Integer, String> userMap = new HashMap<>();
     private static Admin admin;
+    
 
     public static void main(String[] args) {
         QueueManager c = QueueManager.getInstance();
@@ -19,12 +20,14 @@ public class Main {
         Admin u1 = new Admin("Noellee", "work@example.com", "admin123", 1, false);
         User u2 = new User("Coyesha",  "Coyesha@gmail.com", "1234",2,true);
 
+        admin = u1;
+
         users.add(u1);
         users.add(u2);
         userMap.put(u1.getUserID(), u1.getUsername()); // 1 -> Noellee
         userMap.put(u2.getUserID(), u2.getUsername()); // 2 -> Coyesha
 
-         boolean loggedIn = false;
+        boolean loggedIn = false;
         User currentUser = null;
 
         while (!loggedIn) {
@@ -45,7 +48,7 @@ public class Main {
                 continue;
             }
 
-            // Prompt for password
+            //Prompt for password
             System.out.print("Enter password: ");
             
             String enteredPassword = scanner.nextLine();
@@ -104,12 +107,28 @@ public class Main {
                 break;
 
             } else if (choice == 5) {
-            
-                System.out.println("Enter admin user ID:");  
-                int checkadminID = scanner.nextInt();
 
-                if( checkadminID == admin.adminID ){
-                    adminMenu(scanner, admin);
+                //make sure someone is logged in
+                if (currentUser == null) {
+                    System.out.println("No user is currently logged in.");
+                    continue;
+                }
+
+                //only admins are allowed into the admin panel
+                if (!(currentUser instanceof Admin)) {
+                    System.out.println("Access denied. Only admins can open the admin panel.");
+                    continue;
+                }
+
+                //OPTIONAL: still ask for admin ID as an extra check
+                System.out.println("Enter admin user ID:");
+                int checkadminID = scanner.nextInt();
+                scanner.nextLine();  // consume leftover newline
+
+                Admin loggedInAdmin = (Admin) currentUser;  // safe cast
+
+                if (checkadminID == loggedInAdmin.adminID) {
+                    adminMenu(scanner, loggedInAdmin);
                 } else {
                     System.out.println("Invalid admin ID.");
                 }
@@ -117,10 +136,11 @@ public class Main {
             } else {
                 System.out.println("Not a valid choice.");
             }
+
         }
     }
 
-    //  Admin submenu
+    //Admin submenu
     private static void adminMenu(Scanner scanner, Admin admin) {
         while (true) {
             System.out.println("\n--- ADMIN PANEL ---");
