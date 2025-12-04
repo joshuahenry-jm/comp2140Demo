@@ -120,7 +120,7 @@ public class Main {
         }
     }
 
-    // 🔥 Admin submenu
+    //  Admin submenu
     private static void adminMenu(Scanner scanner, Admin admin) {
         while (true) {
             System.out.println("\n--- ADMIN PANEL ---");

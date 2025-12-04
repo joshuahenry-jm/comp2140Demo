@@ -63,13 +63,13 @@ public class User {
         System.out.println("Guest: " + this.isguest);
 
     }
-    // 1️⃣ login()
+    // login()
     public boolean login(String enteredUsername, String enteredPassword) {
         return this.username.equals(enteredUsername) &&
                this.password.equals(enteredPassword);
     }
 
-    // 2️⃣ createProfile()
+    // createProfile()
     public void createProfile(String newUsername, String newEmail) {
         this.username = newUsername;
         this.email = newEmail;
@@ -77,7 +77,7 @@ public class User {
         System.out.println("Profile created/updated successfully!");
     }
 
-    // 3️⃣ placeOrder()
+    //  placeOrder()
     public void placeOrder() {
         // For your demo this is enough
         System.out.println(username + " has placed an order.");

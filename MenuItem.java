@@ -16,7 +16,7 @@ class MenuItem {
         this.name = name;
         this.ingredients = ingredients;
         this.price = price;
-        this.prepTime = prepTime;       // 🔥 now actually set
+        this.prepTime = prepTime;       //  now actually set
         this.itemID = itemID;
 
         // Temporary default stock so items are "in stock" for now
